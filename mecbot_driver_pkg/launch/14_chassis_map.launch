@@ -1,0 +1,35 @@
+<launch>
+
+<!-- 1、加载机器人模型 -->
+ <param name="robot_description_chassis" textfile="$(find mecbot_description)/urdf/mecbot.urdf.xacro" />
+ 
+
+<!-- 2、开启关节和机器人状态节点 -->
+
+    <node name="robot_state_publisher_chassis" pkg="robot_state_publisher" type="robot_state_publisher"  ns="howbot01" output="screen" >
+        <param name="publish_frequency" type="double" value="30.0" />
+        <remap from="robot_description" to="robot_description_chassis"/>
+    </node>
+
+    <node name="joint_state_publisher_chassis" pkg="joint_state_publisher" type="joint_state_publisher" >
+        <remap from="robot_description" to="robot_description_chassis"/>
+	<remap from="/joint_state_publisher" to="/joint_state_publisher_chassis"/>
+	<remap from="/joint_states" to="/joint_states_chassis"/>
+    </node>
+
+<!-- 5、 启动cartographer -->
+  <node pkg="cartographer_ros" type="cartographer_node" name="cartographer_node" 
+        args="-configuration_directory $(find mecbot_driver_pkg)/config -configuration_basename mecbot_cartographer.lua" output="screen">  <!-- 内含有TF，需要和URDF模型保持一致 -->
+        <remap from="imu" to="/imu"/>
+        <remap from="scan" to="/scan"/>
+  </node>
+
+<!-- 6、 生成ros格式的地图 -->
+  <node name="cartographer_occupancy_grid_node" pkg="cartographer_ros"
+      type="cartographer_occupancy_grid_node" args="-resolution 0.05" />
+  
+<!-- 7、开启rviz -->
+  <node name="rviz" pkg="rviz" type="rviz" args="-d /home/mecbot/Mecbot_ws/src/mecbot_driver_pkg/config/mapping.rviz" required="true" output="screen"/>
+</launch>
+
+

@@ -1,0 +1,235 @@
+  <!-- 雷达 -->
+
+  <!-- 雷达 -->
+<gazebo reference="laser1">
+     <sensor type="ray" name="rplidar">
+      <pose>0 0 0 0 0 0</pose>
+      <visualize>true</visualize>
+      <update_rate>40</update_rate>
+      <ray>
+        <scan>
+          <horizontal>
+            <samples>720</samples>
+            <resolution>1</resolution>
+            <min_angle>-2.0</min_angle>
+            <max_angle>2.0</max_angle>
+          </horizontal>
+        </scan>
+        <range>
+          <min>0.1</min>
+          <max>10</max>
+          <resolution>0.01</resolution>
+        </range>
+        <noise>
+          <type>gaussian</type>
+          <mean>0.0</mean>
+          <stddev>0.01</stddev>
+        </noise>
+      </ray>
+      <plugin name="gazebo_rplidar" filename="libgazebo_ros_laser.so">
+        <topicName>robot/laser/scan1</topicName>
+        <frameName>laser1</frameName>
+      </plugin>
+    </sensor>
+  </gazebo>  
+
+
+    <!-- 雷达 -->
+    <gazebo reference="laser2">
+      <sensor type="ray" name="rplidar">
+        <pose>0 0 0 0 0 0</pose>
+        <visualize>true</visualize>
+        <update_rate>40</update_rate>
+        <ray>
+          <scan>
+            <horizontal>
+              <samples>720</samples>
+              <resolution>1</resolution>
+              <min_angle>-2.0</min_angle>
+              <max_angle>2.0</max_angle>
+            </horizontal>
+          </scan>
+          <range>
+            <min>0.1</min>
+            <max>10</max>
+            <resolution>0.01</resolution>
+          </range>
+          <noise>
+            <type>gaussian</type>
+            <mean>0.0</mean>
+            <stddev>0.01</stddev>
+          </noise>
+        </ray>
+        <plugin name="gazebo_rplidar" filename="libgazebo_ros_laser.so">
+          <topicName>/robot/laser/scan2</topicName>
+          <frameName>laser2</frameName>
+        </plugin>
+      </sensor>
+    </gazebo>
+
+  <!-- sick LiDAR 0 controller -->
+  <!-- <gazebo reference="laser1">
+    <sensor type="ray" name="rplidar">
+      <pose>0 0 0 0 0 0</pose>
+      <visualize>false</visualize>
+      <update_rate>40</update_rate>
+      <ray>
+        <scan>
+          <horizontal>
+            <samples>720</samples>
+            <resolution>1</resolution>
+            <min_angle>-2.35619445</min_angle>
+            <max_angle>2.35619445</max_angle>
+          </horizontal>
+        </scan>
+        <range>
+          <min>0.10</min>
+          <max>30.0</max>
+          <resolution>0.01</resolution>
+        </range>
+        <noise>
+          <type>gaussian</type> -->
+          <!-- Noise parameters based on published spec for Hokuyo laser
+               achieving "+-30mm" accuracy at range < 10m.  A mean of 0.0m and
+               stddev of 0.01m will put 99.7% of samples within 0.03m of the true
+               reading. -->
+          <!-- <mean>0.0</mean>
+          <stddev>0.01</stddev>
+        </noise>
+      </ray>
+      <plugin name="gazebo_ros_head_hokuyo_controller" filename="libgazebo_ros_gpu_laser.so">
+        <topicName>/scan1</topicName>
+        <frameName>laser1</frameName>
+      </plugin>
+    </sensor>
+  </gazebo> -->
+
+  <!-- sick LiDAR 1 controller -->
+  <!-- <gazebo reference="laser2">
+    <sensor type="ray" name="rplidar">
+      <pose>0 0 0 0 0 0</pose>
+      <visualize>false</visualize>
+      <update_rate>40</update_rate>
+      <ray>
+        <scan>
+          <horizontal>
+            <samples>720</samples>
+            <resolution>1</resolution>
+            <min_angle>-2.35619445</min_angle>
+            <max_angle>2.35619445</max_angle>
+          </horizontal>
+        </scan>
+        <range>
+          <min>0.10</min>
+          <max>30.0</max>
+          <resolution>0.01</resolution>
+        </range>
+        <noise>
+          <type>gaussian</type> -->
+          <!-- Noise parameters based on published spec for Hokuyo laser
+               achieving "+-30mm" accuracy at range < 10m.  A mean of 0.0m and
+               stddev of 0.01m will put 99.7% of samples within 0.03m of the true
+               reading. -->
+          <!-- <mean>0.0</mean>
+          <stddev>0.01</stddev>
+        </noise>
+      </ray>
+      <plugin name="gazebo_ros_head_hokuyo_controller" filename="libgazebo_ros_gpu_laser.so">
+        <topicName>/scan2</topicName>
+        <frameName>laser2</frameName>
+      </plugin>
+    </sensor>
+  </gazebo> -->
+
+
+
+  <gazebo reference="imu">
+    <gravity>true</gravity>
+    <sensor name="imu_sensor" type="imu">
+      <always_on>true</always_on>
+      <update_rate>200</update_rate>
+      <visualize>false</visualize>
+      <topic>/imu/data</topic>
+      <plugin filename="libgazebo_ros_imu_sensor.so" name="imu_plugin">
+        <topicName>/imu/data</topicName>
+        <bodyName>imu</bodyName>
+        <updateRateHZ>200</updateRateHZ>
+        <gaussianNoise>0.0</gaussianNoise>
+        <xyzOffset>0 0 0</xyzOffset>
+        <rpyOffset>0 0 0</rpyOffset>
+        <frameName>imu</frameName>
+        <initialOrientationAsReference>false</initialOrientationAsReference>
+      </plugin>
+      <pose>0 0 0 0 0 0</pose>
+    </sensor>
+  </gazebo>
+
+       <!-- Transmission is important to link the joints and the controller -->
+       <transmission name="left_front_wheeljoint_trans">
+        <type>transmission_interface/SimpleTransmission</type>
+        <joint name="left_front_wheeljoint">
+          <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+        </joint>
+        <actuator name="left_front_wheeljoint_motor">
+          <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+          <mechanicalReduction>1</mechanicalReduction>
+        </actuator>
+    
+      </transmission>
+      <!-- Transmission is important to link the joints and the controller -->
+      <transmission name="right_front_wheeljoint_trans">
+        <type>transmission_interface/SimpleTransmission</type>
+        <joint name="right_front_wheeljoint">
+          <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+        </joint>
+        <actuator name="right_front_wheeljoint_motor">
+          <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+          <mechanicalReduction>1</mechanicalReduction>
+        </actuator>
+      </transmission>
+      <!-- 控制器 -->
+
+             <!-- Transmission is important to link the joints and the controller -->
+             <transmission name="left_back_wheeljoint_trans">
+              <type>transmission_interface/SimpleTransmission</type>
+              <joint name="left_back_wheeljoint">
+                <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+              </joint>
+              <actuator name="left_back_wheeljoint_motor">
+                <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+                <mechanicalReduction>1</mechanicalReduction>
+              </actuator>
+          
+            </transmission>
+            <!-- Transmission is important to link the joints and the controller -->
+            <transmission name="right_back_wheeljoint_trans">
+              <type>transmission_interface/SimpleTransmission</type>
+              <joint name="right_back_wheeljoint">
+                <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+              </joint>
+              <actuator name="right_back_wheeljoint_motor">
+                <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+                <mechanicalReduction>1</mechanicalReduction>
+              </actuator>
+            </transmission>
+            <!-- 控制器 -->
+
+  <gazebo>
+    <plugin name="skid_steer_drive_controller" filename="libgazebo_ros_skid_steer_drive.so">
+      <alwaysOn>true</alwaysOn>
+      <updateRate>100.0</updateRate>
+      <robotNamespace>/</robotNamespace>
+      <leftFrontJoint>left_front_wheeljoint</leftFrontJoint>
+      <rightFrontJoint>right_front_wheeljoint</rightFrontJoint>
+      <leftRearJoint>left_back_wheeljoint</leftRearJoint>
+      <rightRearJoint>right_back_wheeljoint</rightRearJoint>
+      <wheelSeparation>0.443</wheelSeparation>
+      <wheelDiameter>0.203</wheelDiameter>
+      <torque>3</torque>
+      <commandTopic>/cmd_vel</commandTopic>
+      <odometryTopic>odom</odometryTopic>
+      <odometryFrame>odom</odometryFrame>
+      <robotBaseFrame>base_footprint</robotBaseFrame>
+      <broadcastTF>1</broadcastTF>
+    </plugin>
+  </gazebo>

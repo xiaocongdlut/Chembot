@@ -1,0 +1,39 @@
+<launch>
+
+
+<!-- 6-1、加载地图服务 -->
+   <include  file= "$(find mecbot_driver_pkg)/launch/map_server.launch"/>
+
+
+ <!-- 7、 movebase(DWA算法）-->
+ <!-- <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen" clear_params="true">
+    <rosparam file="$(find mecbot_driver_pkg)/param/move_base_params.yaml" command="load" />
+    <rosparam file="$(find mecbot_driver_pkg)/param/global_costmap_params.yaml" command="load" ns="global_costmap"/>
+    <rosparam file="$(find mecbot_driver_pkg)/param/local_costmap_params.yaml" command="load" ns="local_costmap"/>
+    <rosparam file="$(find mecbot_driver_pkg)/param/global_planner_params.yaml" command="load" ns="GlobalPlanner"/>
+    <rosparam file="$(find mecbot_driver_pkg)/param/dwa_local_planner_params.yaml" command="load" ns="DWAPlannerROS"/>
+    <remap from="/move_base/GlobalPlanner/plan" to="/move_base/NavfnROS/plan"/>
+ </node>-->
+
+<!-- 6-2、启动amcl文件 -->
+   <include  file= "$(find mecbot_driver_pkg)/launch/amcl.launch"/>
+
+<!--<node pkg="amcl" type="amcl" name="amcl" output="screen">
+    <param name="odom_frame_id" value="odom_combined"/>里程计坐标系 
+    <param name="base_frame_id" value="base_footprint"/> 添加机器人基坐标系 
+    <param name="global_frame_id" value="map"/> 添加地图坐标系 
+    <param name="transform_tolerance" value="0.20"/>
+</node>-->
+
+<!-- 7、 movebase-->
+  <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen" clear_params="true">
+        <rosparam file="$(find mecbot_driver_pkg)/param_test/costmap_common_global_params.yaml" command="load" ns="global_costmap" />
+        <rosparam file="$(find mecbot_driver_pkg)/param_test/costmap_common_local_params.yaml" command="load" ns="local_costmap" />
+        <rosparam file="$(find mecbot_driver_pkg)/param_test/local_costmap_params.yaml" command="load" />
+        <rosparam file="$(find mecbot_driver_pkg)/param_test/global_costmap_params.yaml" command="load" />
+        <rosparam file="$(find mecbot_driver_pkg)/param_test/base_local_planner_params.yaml" command="load" />
+  </node> 
+
+<!-- 8、开启rviz -->
+<!-- <node name="rviz" pkg="rviz" type="rviz" args="-d ~/Mecbot_ws/src/mecbot_driver_pkg/config/mapping.rviz" required="true" output="screen"/>-->
+</launch>

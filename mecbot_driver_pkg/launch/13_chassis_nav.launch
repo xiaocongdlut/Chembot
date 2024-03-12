@@ -1,0 +1,36 @@
+<launch>
+
+<!-- 1、加载机器人模型 -->
+ <param name="robot_description_chassis" textfile="$(find mecbot_description)/urdf/mecbot.urdf.xacro" />
+ 
+
+<!-- 2、开启关节和机器人状态节点 -->
+
+    <node name="robot_state_publisher_chassis" pkg="robot_state_publisher" type="robot_state_publisher"  ns="howbot01" output="screen" >
+        <param name="publish_frequency" type="double" value="30.0" />
+        <remap from="robot_description" to="robot_description_chassis"/>
+    </node>
+
+    <node name="joint_state_publisher_chassis" pkg="joint_state_publisher" type="joint_state_publisher" >
+        <remap from="robot_description" to="robot_description_chassis"/>
+	<remap from="/joint_state_publisher" to="/joint_state_publisher_chassis"/>
+	<remap from="/joint_states" to="/joint_states_chassis"/>
+    </node>
+  
+<!-- 7、开启rviz -->
+  <node name="rviz" pkg="rviz" type="rviz" args="-d /home/mecbot/Mecbot_ws/src/mecbot_driver_pkg/config/mapping.rviz" required="true" output="screen"/>
+
+<!-- NAV -->
+
+<!--<node pkg="move1" type="NavigateToTarget" name="NavigateToTarget" />-->
+
+
+
+<!--<node pkg="move1" type="robot_monitor" name="robot_monitor" />-->
+
+<!--<node pkg="rplidar_s1_detect" type="pointcloud_to_map" name="pointcloud_to_map" />-->
+
+<node pkg="mecbot_driver_pkg" type="write_to_file" name="write_to_file" />
+</launch>
+
+

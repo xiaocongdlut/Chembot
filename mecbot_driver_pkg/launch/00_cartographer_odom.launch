@@ -1,0 +1,26 @@
+<launch>
+
+<!-- 6-1、加载地图服务 -->
+   <include  file= "$(find mecbot_driver_pkg)/launch/map_server.launch"/>
+
+  
+<!-- 5、 启动cartographer-->
+  <node pkg="cartographer_ros" type="cartographer_node" name="cartographer_node" 
+        args="-configuration_directory $(find mecbot_driver_pkg)/config -configuration_basename odom_catergrapher.lua" output="screen">  <!-- 内含有TF，需要和URDF模型保持一致-->
+        <remap from="imu" to="/imu"/>
+        <remap from="scan" to="/scan"/>
+  </node> 
+
+
+<!-- 5、 启动amcl -->
+  <include  file= "$(find mecbot_driver_pkg)/launch/amcl_cat.launch"/>
+
+
+  <node pkg="mecbot_driver_pkg" type="odom_cat" name="odom_cat" />
+
+ <!-- <node pkg="mecbot_driver_pkg" type="odom_listener" name="odom_listener"/>-->
+
+
+</launch>
+
+

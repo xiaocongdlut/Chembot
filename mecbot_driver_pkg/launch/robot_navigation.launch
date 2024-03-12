@@ -1,0 +1,27 @@
+<launch>
+<!-- 集成导航相关的launch文件 -->
+
+<!-- 1、加载地图服务 -->
+<include  file= "$(find Mbot200)/launch/Map_server.launch"/>
+
+<!-- 2、启动move_base节点 -->
+<include  file= "$(find Mbot200)/launch/Move_base.launch"/>
+
+<!-- 3、启动amcl文件 -->
+<include  file= "$(find Mbot200)/launch/Acml.launch"/>
+
+<!-- 4、启动rviz -->
+
+<node pkg="rviz" type="rviz" name="rviz" args="-d /home/mecbot/Mecbot_ws/src/mecbot_driver_pkg/config/mapping.rviz"/>  
+
+
+<!-- 5、启动gazebo -->
+<include  file= "$(find Mbot200)/launch/Gazebo.launch"/>  
+
+<!-- 注释1：将路径/home/crown/Virtual_Mbot200/Mbot200/src/Mbot200/map/nav.yaml中crown改成自己电脑的名称即可 -->
+<!--注释2： 删除原始的build和devel,重新对Virtual_Mbot200的包进行catkin_make -->
+<!-- 注释3：启动步骤  cd Virtual_Mbot200/Mbot200/ -->
+<!-- 注释4：初始化环境变量  cd Virtual_Mbot200/Mbot200/ -->
+<!-- 注释5 ：启动 Mbot200文件，roslaunch Mbot200 Virtual_Mbot200.launch  -->
+
+</launch>

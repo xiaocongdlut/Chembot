@@ -1,0 +1,13 @@
+<launch>
+    <!--打开手柄控制节点-->
+    <node pkg="ps2_joy_control_pkg" type="ps2_joy_control" name="ps2_joy_control" output="screen">
+       <param name="axis_linear"   type="int"      value="1" />
+       <param name="axis_angular"  type="int"      value="0"/>
+       <param name="vlinear"       type="double"   value="0.3" />
+       <param name="vangular"      type="double"   value="1"/>
+    </node>
+
+    <!--获取手柄数据节点-->
+   <include file="$(find ps2_joy_control_pkg)/launch/ps2_joy_data.launch" />
+</launch>
+ 

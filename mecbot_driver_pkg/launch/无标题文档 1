@@ -1,0 +1,118 @@
+<launch>
+<!-- 底层节点 -->
+    <node pkg="mecbot_driver_pkg" type="mecbot_driver" name="mecbot_driver" output="screen" />
+
+    <!--打开手柄控制节点-->
+    <node pkg="ps2_joy_control_pkg" type="ps2_joy_control" name="ps2_joy_control" output="screen">
+       <param name="axis_linear"   type="int"      value="1" />
+       <param name="axis_angular"  type="int"      value="0"/>
+       <param name="vlinear"       type="double"   value="0.1" />
+       <param name="vangular"      type="double"   value="0.4"/>
+    </node>
+
+    <!--获取手柄数据节点-->
+   <include file="$(find ps2_joy_control_pkg)/launch/ps2_joy_data.launch" />
+
+<!-- 1、加载机器人模型 -->
+ <param name="robot_description" textfile="$(find mecbot_description)/urdf/mecbot.urdf.xacro" />
+ 
+
+<!-- 2、开启关节和机器人状态节点 -->
+  <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher_chassis">
+  	<param name="publish_frequency" type="double" value="30.0" />
+  </node>
+
+  <node pkg="joint_state_publisher" type ="joint_state_publisher"  name="joint_state_publisher_chassis"  />
+  
+<!-- 3、开启激光雷达 -->
+<!-- 3.1左前方激光雷达 -->
+  <node name="urg_node_1" pkg="urg_node" type="urg_node" output="screen">
+    <param name="ip_address" value="192.168.0.10"/> <!-- 本地IP 192.168.0.11 -->
+    <!-- <param name="serial_port" value="/dev/ttyACM0"/> -->
+    <param name="serial_baud" value="115200"/>
+    <param name="frame_id" value="laser1"/> <!-- 和URDF模型保持一致 -->
+    <param name="calibrate_time" value="true"/>
+    <param name="publish_intensity" value="false"/>
+    <param name="publish_multiecho" value="false"/>
+    <param name="angle_min" value="-2.35619445"/><!-- -1.5707963 -->
+    <param name="angle_max" value="2.35619445"/><!-- 1.5707963 -->
+    <remap from="/scan" to="/scan1"/>
+  </node>
+
+<!-- 3.2右后方激光雷达 -->
+  <node name="urg_node_2" pkg="urg_node" type="urg_node" output="screen">
+    <param name="ip_address" value="192.168.1.20"/> <!-- 本地IP 192.168.1.21 -->
+    <!-- <param name="serial_port" value="/dev/ttyACM0"/> -->
+    <param name="serial_baud" value="115200"/>
+    <param name="frame_id" value="laser2"/> <!-- 和URDF模型保持一致 -->
+    <param name="calibrate_time" value="true"/>
+    <param name="publish_intensity" value="false"/>
+    <param name="publish_multiecho" value="false"/>
+    <param name="angle_min" value="-2.35619445"/><!-- -1.5707963 -->
+    <param name="angle_max" value="2.35619445"/><!-- 1.5707963 -->
+    <remap from="/scan" to="/scan2"/>
+  </node>
+
+<!-- 3.3开启激光雷达融合节点 -->
+	<node pkg="ira_laser_tools" name="laserscan_multi_merger" type="laserscan_multi_merger" output="screen">
+	<param name="destination_frame" value="imu"/>
+	<!--虚拟激光在什么坐标系下进行描述-->
+	<param name="cloud_destination_topic" value="/merged_cloud"/>
+	<!--融合后生成的激光名-->
+	<param name="scan_destination_topic" value="/scan"/>
+	<param name="laserscan_topics" value ="/scan1 /scan2" /> <!-- LIST OF THE LASER SCAN TOPICS TO SUBSCRIBE -->
+	<!-- scan1 和 scan2分别是需要融合的话题名称 -->
+	<!--value等于需要融合的激光话题名-->
+	<param name="angle_min" value="-3.14"/>
+	<param name="angle_max" value="3.14"/>
+	<param name="angle_increment" value="0.0058"/>
+	<param name="scan_time" value="0.0333333"/>
+	<param name="range_min" value="0.30"/>
+	<param name="range_max" value="50.0"/>
+	</node>->
+
+<!-- 4、开启IMU -->
+  <node pkg="fdilink_ahrs" name="ahrs_driver" type="ahrs_driver" output="screen" >
+    <!-- 是否输出debug信息 -->
+    <param name="debug"  value="false"/>
+    <param name="port"  value="/dev/SERIAL2"/>  <!-- IMU 接在HUB的2号串口 -->
+    <!-- 波特率 -->
+    <param name="baud"  value="921600"/>
+    <!-- 发布的imu话题名 -->
+    <param name="imu_topic"  value="imu"/>
+    <!-- 发布的imu话题中的frame_id -->
+    <param name="imu_frame"  value="imu"/> <!-- 和URDF模型保持一致 -->
+    <!-- 地磁北的yaw角 -->
+    <param name="mag_pose_2d_topic"  value="/mag_pose_2d"/>
+    <!-- 欧拉角 -->
+    <param name="Euler_angles_pub_"  value="/euler_angles"/>
+    <!-- 磁力计磁场强度 -->
+    <param name="Magnetic_pub_"  value="/magnetic"/>
+    <!-- gps数据输出话题-->
+    <param name="gps_topic_" value="/gps/fix"/>
+    <!-- 机体系速度数据输出话题-->
+    <param name="twist_topic_" value="/system_speed"/>
+    <!-- NED系位移和速度数据输出话题-->
+    <param name="NED_odom_topic_" value="/NED_odometry"/>
+    <!-- 发布的数据基于不同设备有不同的坐标系   -->
+    <param name="device_type"  value="1"/> <!-- 0: origin_data, 1: for single imu or ucar in ROS, 2:for Xiao in ROS -->
+  </node>
+
+  <!-- Robot pose ekf 拓展卡尔曼滤波-->
+   <!--<node pkg="robot_pose_ekf" type="robot_pose_ekf" name="robot_pose_ekf" output="screen">
+    <param name="output_frame" value="odom_combined"/>
+    <param name="base_footprint_frame" value="base_footprint"/>
+    <param name="freq" value="30.0"/>
+    <param name="sensor_timeout" value="2.0"/>
+    <param name="odom_used" value="true"/>
+    <param name="imu_used" value="true"/>
+    <param name="vo_used" value="false"/>
+    <remap from="imu_data" to="/imu" />
+  </node>-->
+  
+<!-- 7、开启rviz -->
+  <node name="rviz" pkg="rviz" type="rviz" args="-d ~/Mecbot_ws/src/mecbot_driver_pkg/config/mapping.rviz" required="true" output="screen"/>
+
+</launch>
+
+   

@@ -1,0 +1,29 @@
+<launch>
+
+<!-- 加载地图服务 -->
+   <include  file= "$(find mecbot_driver_pkg)/launch/map_server.launch"/>
+
+  
+<!-- 启动cartographer -->
+  <node pkg="cartographer_ros" type="cartographer_node" name="cartographer_node" respawn="true"
+        args="-configuration_directory $(find mecbot_driver_pkg)/config -configuration_basename odom_catergrapher.lua" output="screen">  <!-- 内含有TF，需要和URDF模型保持一致-->
+        <remap from="imu" to="/imu"/>
+        <remap from="scan" to="/scan"/>
+  </node> 
+
+
+<!-- 启动amcl -->
+   <include  file= "$(find mecbot_driver_pkg)/launch/amcl_cat.launch"/>
+
+
+<!-- cat里程计 tf转换topic -->
+  <node pkg="mecbot_driver_pkg" type="odom_cat" name="odom_cat"/>
+
+<!-- 点云过滤 -->
+ <!--  <node pkg="mecbot_driver_pkg" type="pointcloud_filter" name="pointcloud_filter" />-->
+
+<!-- NAV -->
+ <!-- <node pkg="move1" type="NavigateToTarget" name="NavigateToTarget" />-->
+</launch>
+
+

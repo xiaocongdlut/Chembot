@@ -1,0 +1,484 @@
+<?xml version="1.0"?>
+<!-- This URDF was automatically created by SolidWorks to URDF Exporter! Originally created by Stephen Brawner (brawner@gmail.com) 
+     Commit Version: 1.6.0-4-g7f85cfe  Build Version: 1.6.7995.38578
+     For more information, please see http://wiki.ros.org/sw_urdf_exporter -->
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro"  name="mecbot">
+  <link name="base_footprint">
+    <visual>
+      <geometry>
+        <sphere radius="0.001"/>
+      </geometry>
+    </visual>
+  </link>
+  <joint name="basefootprint2base" type="fixed">
+    <parent link="base_footprint" />
+    <child link="chassis_base_link"/>
+    <origin xyz="0 0 0.1" rpy="0 0 0"/>
+  </joint>
+  <link
+    name="chassis_base_link">
+    <inertial>
+      <origin
+        xyz="0.056472 -3.1466E-06 0.21552"
+        rpy="0 0 0" />
+      <mass
+        value="8" />
+      <inertia
+        ixx="1.0214"
+        ixy="0.00020537"
+        ixz="-0.0016146"
+        iyy="2.1785"
+        iyz="-0.0011678"
+        izz="2.7667" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://mecbot_description/meshes/chassis_base_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.7 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://mecbot_description/meshes/chassis_base_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <link
+    name="left_front_wheel">
+    <inertial>
+      <origin
+        xyz="0 0.041879 -2.0817E-17"
+        rpy="0 0 0" />
+      <mass
+        value="0.1" />
+      <inertia
+        ixx="0.02472"
+        ixy="2.3849E-18"
+        ixz="2.3024E-18"
+        iyy="0.038375"
+        iyz="-1.3327E-18"
+        izz="0.02472" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://mecbot_description/meshes/left_front_wheel.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://mecbot_description/meshes/left_front_wheel.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="left_front_wheeljoint"
+    type="fixed">
+    <origin
+      xyz="0.295 0.2215 -0.045"
+      rpy="0 0 0" />
+    <parent
+      link="chassis_base_link" />
+    <child
+      link="left_front_wheel" />
+    <axis
+      xyz="0 1 0" />
+  </joint>
+  <link
+    name="right_front_wheel">
+    <inertial>
+      <origin
+        xyz="2.7756E-16 -0.041879 1.3878E-17"
+        rpy="0 0 0" />
+      <mass
+        value="0.1" />
+      <inertia
+        ixx="0.02472"
+        ixy="-5.0277E-17"
+        ixz="9.457E-20"
+        iyy="0.038375"
+        iyz="-4.76E-18"
+        izz="0.02472" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://mecbot_description/meshes/right_front_wheel.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://mecbot_description/meshes/right_front_wheel.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="right_front_wheeljoint"
+    type="fixed">
+    <origin
+      xyz="0.295 -0.2215 -0.045"
+      rpy="0 0 0" />
+    <parent
+      link="chassis_base_link" />
+    <child
+      link="right_front_wheel" />
+    <axis
+      xyz="0 1 0" />
+  </joint>
+  <link
+    name="left_back_wheel">
+    <inertial>
+      <origin
+        xyz="-2.8025E-06 0.03921 -6.481E-08"
+        rpy="0 0 0" />
+      <mass
+        value="0.1" />
+      <inertia
+        ixx="0.049803"
+        ixy="-2.5042E-07"
+        ixz="1.0283E-07"
+        iyy="0.077092"
+        iyz="2.5039E-07"
+        izz="0.049803" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://mecbot_description/meshes/left_back_wheel.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://mecbot_description/meshes/left_back_wheel.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="left_back_wheeljoint"
+    type="fixed">
+    <origin
+      xyz="-0.295 0.2215 -0.045"
+      rpy="0 0 0" />
+    <parent
+      link="chassis_base_link" />
+    <child
+      link="left_back_wheel" />
+    <axis
+      xyz="0 1 0" />
+  </joint>
+  <link
+    name="right_back_wheel">
+    <inertial>
+      <origin
+        xyz="1.2409E-07 -0.03715 2.1534E-05"
+        rpy="0 0 0" />
+      <mass
+        value="0.1" />
+      <inertia
+        ixx="0.050054"
+        ixy="5.0079E-07"
+        ixz="2.0566E-07"
+        iyy="0.077273"
+        iyz="-5.0085E-07"
+        izz="0.050054" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://mecbot_description/meshes/right_back_wheel.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://mecbot_description/meshes/right_back_wheel.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="right_back_wheeljoint"
+    type="fixed">
+    <origin
+      xyz="-0.295 -0.2215 -0.045"
+      rpy="0 0 0" />
+    <parent
+      link="chassis_base_link" />
+    <child
+      link="right_back_wheel" />
+    <axis
+      xyz="0 1 0" />
+  </joint>
+
+  <link
+    name="laser1">
+    <inertial>
+      <origin
+        xyz="-9.24077092611109E-05 -2.2767683637015E-06 -0.0215671894585299"
+        rpy="0 0 0" />
+      <mass
+        value="0.01" />
+      <inertia
+        ixx="7.50546211788374E-05"
+        ixy="-8.44511570076821E-09"
+        ixz="-3.51750239427099E-07"
+        iyy="7.5504465003026E-05"
+        iyz="-7.53335762869979E-09"
+        izz="4.66181052574846E-05" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://mecbot_description/meshes/laser1.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.203921568627451 0.203921568627451 0.203921568627451 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://mecbot_description/meshes/laser1.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="laser1_joint"
+    type="fixed">
+    <origin
+      xyz="0.50034 0.27534 0.1295"
+      rpy="0 0 0.7854" />
+    <parent
+      link="chassis_base_link" />
+    <child
+      link="laser1" />
+    <axis
+      xyz="0 0 0" />
+  </joint>
+
+  <link
+    name="laser2">
+    <inertial>
+      <origin
+        xyz="-9.24077092759878E-05 -2.27676834890778E-06 -0.0215671894585298"
+        rpy="0 0 0" />
+      <mass
+        value="0.01" />
+      <inertia
+        ixx="7.5054621178837E-05"
+        ixy="-8.44511570052765E-09"
+        ixz="-3.51750239446823E-07"
+        iyy="7.5504465003026E-05"
+        iyz="-7.53335760882355E-09"
+        izz="4.66181052574851E-05" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://mecbot_description/meshes/laser2.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.203921568627451 0.203921568627451 0.203921568627451 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://mecbot_description/meshes/laser2.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="laser2_joint"
+    type="fixed">
+    <origin
+      xyz="-0.50034 -0.27534 0.1295"
+      rpy="0 0 -2.3562" />
+    <parent
+      link="chassis_base_link" />
+    <child
+      link="laser2" />
+    <axis
+      xyz="0 0 0" />
+  </joint>
+  <link
+    name="imu">
+    <inertial>
+      <origin
+        xyz="2.55582808071874E-05 7.19061909648194E-18 0.00723896427643422"
+        rpy="0 0 0" />
+      <mass
+        value="0.001" />
+      <inertia
+        ixx="8.19933552387946E-06"
+        ixy="7.76219601951189E-21"
+        ixz="2.74492492265891E-10"
+        iyy="8.79046322032183E-06"
+        iyz="2.17940777619099E-21"
+        izz="1.52285534655685E-05" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://mecbot_description/meshes/imu.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://mecbot_description/meshes/imu.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="imu"
+    type="fixed">
+    <origin
+      xyz="0 0 0.114"
+      rpy="0 0 0" />
+    <parent
+      link="chassis_base_link" />
+    <child
+      link="imu" />
+    <axis
+      xyz="0 0 0" />
+  </joint>
+  <link
+    name="camera">
+    <inertial>
+      <origin
+        xyz="-3.52038127944959E-06 -1.23512234750001E-17 -0.0596328233070752"
+        rpy="0 0 0" />
+      <mass
+        value="0.001" />
+      <inertia
+        ixx="0.00643323768980822"
+        ixy="-2.30676264077913E-21"
+        ixz="8.96467359768408E-07"
+        iyy="0.00643305742831101"
+        iyz="-1.21297531615737E-18"
+        izz="0.00288698969659289" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://mecbot_description/meshes/camera.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0 0 0.752941176470588 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://mecbot_description/meshes/camera.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="camera_link"
+    type="fixed">
+    <origin
+      xyz="0 0 0.006"
+      rpy="0 0 0" />
+    <parent
+      link="chassis_base_link" />
+    <child
+      link="camera" />
+    <axis
+      xyz="0 0 0" />
+  </joint>
+</robot>

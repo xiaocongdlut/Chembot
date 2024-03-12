@@ -1,0 +1,126 @@
+<?xml version="1.0"?>
+<launch>
+  <arg name="debug" default="false" doc="Debug flag that will get passed on to ur_common.launch"/>
+  <arg name="robot_ip" doc="IP address by which the robot can be reached."/>
+  <arg name="reverse_ip" default="" doc="IP of the driver, if set to empty it will detect it automatically."/>
+  <arg name="reverse_port" default="50001" doc="Port that will be opened by the driver to allow direct communication between the driver and the robot controller."/>
+  <arg name="script_sender_port" default="50002" doc="The driver will offer an interface to receive the program's URScript on this port. If the robot cannot connect to this port, `External Control` will stop immediately."/>
+  <arg name="trajectory_port" default="50003" doc="Port that will be opened by the driver to allow trajectory forwarding."/>
+  <arg name="tf_prefix" default="" doc="tf_prefix used for the robot."/>
+  <arg name="controllers" default="joint_state_controller scaled_pos_joint_traj_controller speed_scaling_state_controller force_torque_sensor_controller" doc="Controllers that are activated by default."/>
+  <arg name="stopped_controllers" default="pos_joint_traj_controller joint_group_vel_controller" doc="Controllers that are initally loaded, but not started."/>
+  <arg name="controller_config_file" default="$(find ur_robot_driver)/config/ur5e_controllers.yaml" doc="Config file used for defining the ROS-Control controllers."/>
+  <arg name="robot_description_file" default="$(find ur_description)/launch/load_ur5e.launch" doc="Robot description launch file."/>
+  <arg name="kinematics_config" default="$(find ur_description)/config/ur5e/default_kinematics.yaml" doc="Kinematics config file used for calibration correction. This will be used to verify the robot's calibration is matching the robot_description."/>
+  <arg name="use_tool_communication" default="false" doc="On e-Series robots tool communication can be enabled with this argument"/>
+  <arg name="tool_voltage" default="0" doc="Tool voltage set at the beginning of the UR program. Only used, when `use_tool_communication` is set to true."/>
+  <arg name="tool_parity" default="0" doc="Parity configuration used for tool communication. Only used, when `use_tool_communication` is set to true."/>
+  <arg name="tool_baud_rate" default="115200" doc="Baud rate used for tool communication. Only used, when `use_tool_communication` is set to true."/>
+  <arg name="tool_stop_bits" default="1" doc="Number of stop bits used for tool communication. Only used, when `use_tool_communication` is set to true."/>
+  <arg name="tool_rx_idle_chars" default="1.5" doc="Number of idle chars in RX channel used for tool communication. Only used, when `use_tool_communication` is set to true."/>
+  <arg name="tool_tx_idle_chars" default="3.5" doc="Number of idle chars in TX channel used for tool communication. Only used, when `use_tool_communication` is set to true."/>
+  <arg name="tool_device_name" default="/tmp/ttyUR" doc="Local device name used for tool communication. Only used, when `use_tool_communication` is set to true."/>
+  <arg name="tool_tcp_port" default="54321" doc="Port on which the robot controller publishes the tool comm interface. Only used, when `use_tool_communication` is set to true."/>
+  <arg name="headless_mode" default="false" doc="Automatically send URScript to robot to execute. On e-Series this does require the robot to be in 'remote-control' mode. With this, the URCap is not needed on the robot."/>
+
+  <include file="$(find ur_robot_driver)/launch/ur_common.launch" pass_all_args="true" />
+
+   <!-- 底层节点 -->
+   <node pkg="mecbot_driver_pkg" type="mecbot_driver" name="mecbot_driver" output="screen" />
+
+    <!--打开手柄控制节点-->
+    <node pkg="ps2_joy_control_pkg" type="ps2_joy_control" name="ps2_joy_control" output="screen">
+       <param name="axis_linear"   type="int"      value="1" />
+       <param name="axis_angular"  type="int"      value="0"/>
+       <param name="vlinear"       type="double"   value="0.2" />
+       <param name="vangular"      type="double"   value="0.05"/>
+    </node>
+
+    <!--获取手柄数据节点-->
+   <include file="$(find ps2_joy_control_pkg)/launch/ps2_joy_data.launch" />
+
+<!-- 3、开启激光雷达 -->
+<!-- 3.1左前方激光雷达 -->
+  <node name="urg_node_1" pkg="urg_node" type="urg_node" output="screen">
+    <param name="ip_address" value="192.168.0.10"/> <!-- 本地IP 192.168.0.11 -->
+    <!-- <param name="serial_port" value="/dev/ttyACM0"/> -->
+    <param name="serial_baud" value="115200"/>
+    <param name="frame_id" value="laser1"/> <!-- 和URDF模型保持一致 -->
+    <param name="calibrate_time" value="true"/>
+    <param name="publish_intensity" value="false"/>
+    <param name="publish_multiecho" value="false"/>
+    <param name="angle_min" value="-3.14"/><!-- -1.5707963 -->
+    <param name="angle_max" value="3.14"/><!-- 1.5707963 -->
+    <remap from="/scan" to="/scan1"/>
+  </node>
+
+<!-- 3.2右后方激光雷达 -->
+  <node name="urg_node_2" pkg="urg_node" type="urg_node" output="screen">
+    <param name="ip_address" value="192.168.1.20"/> <!-- 本地IP 192.168.1.21 -->
+    <!-- <param name="serial_port" value="/dev/ttyACM0"/> -->
+    <param name="serial_baud" value="115200"/>
+    <param name="frame_id" value="laser2"/> <!-- 和URDF模型保持一致 -->
+    <param name="calibrate_time" value="true"/>
+    <param name="publish_intensity" value="false"/>
+    <param name="publish_multiecho" value="false"/>
+    <param name="angle_min" value="-3.14"/><!-- -1.5707963 -->
+    <param name="angle_max" value="3.14"/><!-- 1.5707963 -->
+    <remap from="/scan" to="/scan2"/>
+  </node>
+
+<!-- 3.3开启激光雷达融合节点 -->
+	<node pkg="ira_laser_tools" name="laserscan_multi_merger" type="laserscan_multi_merger" output="screen">
+	<param name="destination_frame" value="imu"/>
+	<!--虚拟激光在什么坐标系下进行描述-->
+	<param name="cloud_destination_topic" value="/merged_cloud"/>
+	<!--融合后生成的激光名-->
+	<param name="scan_destination_topic" value="/scan"/>
+	<param name="laserscan_topics" value ="/scan1 /scan2" /> <!-- LIST OF THE LASER SCAN TOPICS TO SUBSCRIBE -->
+	<!-- scan1 和 scan2分别是需要融合的话题名称 -->
+	<!--value等于需要融合的激光话题名-->
+	<param name="angle_min" value="-3.14"/>
+	<param name="angle_max" value="3.14"/>
+	<param name="angle_increment" value="0.0058"/>
+	<param name="scan_time" value="0.0333333"/>
+	<param name="range_min" value="0.30"/>
+	<param name="range_max" value="50.0"/>
+	</node>->
+
+<!-- 4、开启IMU -->
+  <node pkg="fdilink_ahrs" name="ahrs_driver" type="ahrs_driver" output="screen" >
+    <!-- 是否输出debug信息 -->
+    <param name="debug"  value="false"/>
+    <param name="port"  value="/dev/SERIAL2"/>  <!-- IMU 接在HUB的2号串口 -->
+    <!-- 波特率 -->
+    <param name="baud"  value="921600"/>
+    <!-- 发布的imu话题名 -->
+    <param name="imu_topic"  value="imu"/>
+    <!-- 发布的imu话题中的frame_id -->
+    <param name="imu_frame"  value="imu"/> <!-- 和URDF模型保持一致 -->
+    <!-- 地磁北的yaw角 -->
+    <param name="mag_pose_2d_topic"  value="/mag_pose_2d"/>
+    <!-- 欧拉角 -->
+    <param name="Euler_angles_pub_"  value="/euler_angles"/>
+    <!-- 磁力计磁场强度 -->
+    <param name="Magnetic_pub_"  value="/magnetic"/>
+    <!-- gps数据输出话题-->
+    <param name="gps_topic_" value="/gps/fix"/>
+    <!-- 机体系速度数据输出话题-->
+    <param name="twist_topic_" value="/system_speed"/>
+    <!-- NED系位移和速度数据输出话题-->
+    <param name="NED_odom_topic_" value="/NED_odometry"/>
+    <!-- 发布的数据基于不同设备有不同的坐标系   -->
+    <param name="device_type"  value="1"/> <!-- 0: origin_data, 1: for single imu or ucar in ROS, 2:for Xiao in ROS -->
+  </node>
+  
+<!-- 5、 启动cartographer -->
+  <node pkg="cartographer_ros" type="cartographer_node" name="cartographer_node" 
+        args="-configuration_directory $(find mecbot_driver_pkg)/config -configuration_basename mecbot_cartographer.lua" output="screen">  <!-- 内含有TF，需要和URDF模型保持一致 -->
+        <remap from="imu" to="/imu"/>
+        <remap from="scan" to="/scan"/>
+  </node>
+
+<!-- 6、 生成ros格式的地图 -->
+  <node name="cartographer_occupancy_grid_node" pkg="cartographer_ros"
+      type="cartographer_occupancy_grid_node" args="-resolution 0.05" />
+</launch>

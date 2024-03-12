@@ -1,0 +1,65 @@
+<launch>
+
+<!-- 1、加载机器人模型 -->
+ <param name="robot_description" textfile="$(find mecbot_description)/urdf/mecbot.urdf.xacro" />
+ 
+
+<!-- 2、开启关节和机器人状态节点 -->
+  <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher">
+  	<param name="publish_frequency" type="double" value="30.0" />
+  </node>
+
+  <node pkg="joint_state_publisher" type ="joint_state_publisher"  name="joint_state_publisher"  />
+  
+<!-- 3、开启激光雷达 -->
+<!-- 左前方激光雷达 -->
+  <node name="urg_node_1" pkg="urg_node" type="urg_node" output="screen">
+    <param name="ip_address" value="192.168.0.10"/> <!-- 本地IP 192.168.0.11 -->
+    <!-- <param name="serial_port" value="/dev/ttyACM0"/> -->
+    <param name="serial_baud" value="115200"/>
+    <param name="frame_id" value="laser1"/> <!-- 和URDF模型保持一致 -->
+    <param name="calibrate_time" value="true"/>
+    <param name="publish_intensity" value="false"/>
+    <param name="publish_multiecho" value="false"/>
+    <param name="angle_min" value="-3.14"/><!-- -1.5707963 -->
+    <param name="angle_max" value="3.14"/><!-- 1.5707963 -->
+    <remap from="/scan" to="/scan1"/>
+  </node>
+
+<!-- 右后方激光雷达 -->
+  <node name="urg_node_2" pkg="urg_node" type="urg_node" output="screen">
+    <param name="ip_address" value="192.168.1.20"/> <!-- 本地IP 192.168.1.21 -->
+    <!-- <param name="serial_port" value="/dev/ttyACM0"/> -->
+    <param name="serial_baud" value="115200"/>
+    <param name="frame_id" value="laser2"/> <!-- 和URDF模型保持一致 -->
+    <param name="calibrate_time" value="true"/>
+    <param name="publish_intensity" value="false"/>
+    <param name="publish_multiecho" value="false"/>
+    <param name="angle_min" value="-3.14"/><!-- -1.5707963 -->
+    <param name="angle_max" value="3.14"/><!-- 1.5707963 -->
+    <remap from="/scan" to="/scan2"/>
+  </node>
+
+<!-- 4、开启激光雷达融合节点 -->
+	<node pkg="ira_laser_tools" name="laserscan_multi_merger" type="laserscan_multi_merger" output="screen">
+	<param name="destination_frame" value="chassis_base_link"/>
+	<!--虚拟激光在什么坐标系下进行描述-->
+	<param name="cloud_destination_topic" value="/merged_cloud"/>
+	<!--融合后生成的激光名-->
+	<param name="scan_destination_topic" value="/scan"/>
+	<param name="laserscan_topics" value ="/scan1 /scan2" /> <!-- LIST OF THE LASER SCAN TOPICS TO SUBSCRIBE -->
+	<!-- scan1 和 scan2分别是需要融合的话题名称 -->
+	<!--value等于需要融合的激光话题名-->
+	<param name="angle_min" value="-3.14"/>
+	<param name="angle_max" value="3.14"/>
+	<param name="angle_increment" value="0.0058"/>
+	<param name="scan_time" value="0.0333333"/>
+	<param name="range_min" value="0.30"/>
+	<param name="range_max" value="50.0"/>
+	</node>
+
+<!-- 7、开启rviz -->
+  <node name="rviz" pkg="rviz" type="rviz" output="screen"/>
+</launch>
+
+

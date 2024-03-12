@@ -1,0 +1,36 @@
+{
+  "configurations": [
+    {
+      "browse": {
+        "databaseFilename": "${default}",
+        "limitSymbolsToIncludedHeaders": false
+      },
+      "includePath": [
+        "/home/dut/UR_ws/devel/include/**",
+        "/home/dut/catkin_ws/devel/include/**",
+        "/home/dut/Mecbot_ws/devel/include/**",
+        "/home/dut/MERT_MBOT_ws/devel/include/**",
+        "/opt/ros/melodic/include/**",
+        "/home/dut/UR_ws/src/Universal_Robots_ROS_Driver/controller_stopper/include/**",
+        "/home/dut/catkin_ws/src/howbot_demo/include/**",
+        "/home/dut/MERT_MBOT_ws/src/LIO-SAM/include/**",
+        "/home/dut/catkin_ws/src/rrt_exploration/include/**",
+        "/home/dut/MERT_MBOT_ws/src/timoo/timoo_driver/include/**",
+        "/home/dut/MERT_MBOT_ws/src/timoo/timoo_laserscan/include/**",
+        "/home/dut/MERT_MBOT_ws/src/timoo/timoo_pointcloud/include/**",
+        "/home/dut/UR_ws/src/Universal_Robots_ROS_Driver/ur_calibration/include/**",
+        "/home/dut/UR_ws/src/fmauch_universal_robot/ur_kinematics/include/**",
+        "/home/dut/UR_ws/src/Universal_Robots_ROS_Driver/ur_robot_driver/include/**",
+        "/home/dut/Mecbot_ws/src/urg_node/include/**",
+        "/home/dut/MERT_MBOT_ws/src/wheeltec_joy_control/include/**",
+        "/usr/include/**"
+      ],
+      "name": "ROS",
+      "intelliSenseMode": "gcc-x64",
+      "compilerPath": "/usr/bin/gcc",
+      "cStandard": "gnu11",
+      "cppStandard": "c++14"
+    }
+  ],
+  "version": 4
+}

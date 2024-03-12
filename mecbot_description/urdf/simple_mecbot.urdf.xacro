@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="mecbot">
+    <xacro:include filename="$(find urg_node)/urdf/hokuyo_ust10.urdf.xacro"/>
+
+    <link name="chassis_base_link">
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <box size="0.95 0.54 0.4"/>
+        </geometry>
+        <material name="">
+          <color rgba="0.7 1 1 1" />
+        </material>
+      </visual>
+    </link>
+
+ <link name="laser1">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://mecbot_description/meshes_simple/laser.STL" />
+      </geometry>
+      <material name="">
+        <color rgba="1 1 1 1" />
+      </material>
+    </visual>
+  </link>
+
+    <joint name="laser1_joint" type="fixed">
+	<origin xyz="0.45 0.27 0.23" rpy="0 0 0.785"/>
+	<parent link="chassis_base_link"/>
+	<child link="laser1"/>
+	<axis xyz="0 0 0"/>
+    </joint>
+
+ <link name="laser2">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://mecbot_description/meshes_simple/laser.STL" />
+      </geometry>
+      <material name="">
+        <color rgba="1 1 1 1" />
+      </material>
+    </visual>
+  </link>
+
+    <joint name="laser2_joint" type="fixed">
+	<origin xyz="-0.45 -0.27 0.23" rpy="0 0 3.925"/>
+	<parent link="chassis_base_link"/>
+	<child link="laser2"/>
+	<axis xyz="0 0 0"/>
+    </joint>
+
+ <link name="imu">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <box size="0.05 0.06 0.02"/>
+      </geometry>
+      <material name="">
+        <color rgba="0.3 0.8 1 1" />
+      </material>
+    </visual>
+  </link>
+
+    <joint name="gyro_joint" type="fixed">
+	<origin xyz="0 0 0.21" rpy="0 0 0"/>
+	<parent link="chassis_base_link"/>
+	<child link="imu"/>
+	<axis xyz="0 0 0"/>
+    </joint>
+
+</robot>

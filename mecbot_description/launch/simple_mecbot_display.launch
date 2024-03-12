@@ -1,0 +1,19 @@
+<launch>
+
+<!-- 1、加载机器人模型 -->
+ <param name="robot_description" textfile="$(find mecbot_description)/urdf/simple_mecbot.urdf.xacro" />
+ 
+
+<!-- 2、开启关节和机器人状态节点 -->
+  <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher">
+  	<param name="publish_frequency" type="double" value="30.0" />
+  </node>
+
+  <node pkg="joint_state_publisher" type ="joint_state_publisher"  name="joint_state_publisher"  />
+  
+<!-- 3、开启rviz -->
+  <node name="rviz" pkg="rviz" type="rviz" output="screen"/>
+</launch>
+
+
+
