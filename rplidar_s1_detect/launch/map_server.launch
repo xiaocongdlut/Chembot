@@ -1,0 +1,9 @@
+<launch>
+
+<arg name="map" default="map2.yaml"/>
+
+<node pkg="map_server" type="map_server" name="map_server"  args="$(find rplidar_s1_detect)/map/$(arg map)">
+</node>
+
+
+</launch>

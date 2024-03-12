@@ -1,0 +1,31 @@
+{
+  "configurations": [
+    {
+      "browse": {
+        "databaseFilename": "${default}",
+        "limitSymbolsToIncludedHeaders": false
+      },
+      "includePath": [
+        "/home/crown/s1_ws/devel/include/**",
+        "/home/crown/MERT_MBOT_ws/devel/include/**",
+        "/home/crown/multisensors/devel/include/**",
+        "/opt/ros/melodic/include/**",
+        "/home/crown/multisensors/src/fdilink_ahrs/include/**",
+        "/opt/ros/melodic/share/innovusion_pointcloud/include/**",
+        "/home/crown/MERT_MBOT_ws/src/LIO-SAM/include/**",
+        "/home/crown/~catkin_make/src/rrt_star_global_planner-main/include/**",
+        "/home/crown/MERT_MBOT_ws/src/timoo/timoo_driver/include/**",
+        "/home/crown/MERT_MBOT_ws/src/timoo/timoo_laserscan/include/**",
+        "/home/crown/MERT_MBOT_ws/src/timoo/timoo_pointcloud/include/**",
+        "/home/crown/MERT_MBOT_ws/src/wheeltec_joy_control/include/**",
+        "/usr/include/**"
+      ],
+      "name": "ROS",
+      "intelliSenseMode": "gcc-x64",
+      "compilerPath": "/usr/bin/gcc",
+      "cStandard": "gnu11",
+      "cppStandard": "c++14"
+    }
+  ],
+  "version": 4
+}

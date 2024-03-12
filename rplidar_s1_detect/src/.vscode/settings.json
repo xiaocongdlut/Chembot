@@ -1,0 +1,18 @@
+{
+    "python.autoComplete.extraPaths": [
+        "/home/crown/s1_ws/devel/lib/python2.7/dist-packages",
+        "/home/crown/MERT_MBOT_ws/devel/lib/python2.7/dist-packages",
+        "/home/crown/multisensors/devel/lib/python2.7/dist-packages",
+        "/opt/ros/melodic/lib/python2.7/dist-packages"
+    ],
+    "python.analysis.extraPaths": [
+        "/home/crown/s1_ws/devel/lib/python2.7/dist-packages",
+        "/home/crown/MERT_MBOT_ws/devel/lib/python2.7/dist-packages",
+        "/home/crown/multisensors/devel/lib/python2.7/dist-packages",
+        "/opt/ros/melodic/lib/python2.7/dist-packages"
+    ],
+    "C_Cpp.errorSquiggles": "Enabled",
+    "files.associations": {
+        "cmath": "cpp"
+    }
+}
